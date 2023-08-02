@@ -4,7 +4,7 @@ import rclpy.node
 import board
 import neopixel_spi
 
-class StatusLights(Node):
+class StatusLightsNode(Node):
 
     def __init__(self) -> None:
         super().__init__('status_lights')
@@ -20,7 +20,7 @@ class StatusLights(Node):
 
 def main() -> None:
     rclpy.init()
-    node = StatusLights()
+    node = StatusLightsNode()
     rclpy.spin(node)
 
 if __name__ == '__main__':
