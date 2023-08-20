@@ -13,7 +13,7 @@ class StatusLightsNode(Node):
 
         self.declare_parameter('led_count', 8)
 
-        led_count = self.get_parameter('led_count').value()
+        led_count = self.get_parameter('led_count').value
 
         self.spi = board.SPI()
         self.pixels = neopixel_spi.NeoPixel_SPI(self.spi, led_count)
