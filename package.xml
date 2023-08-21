@@ -8,6 +8,7 @@
   <license>GPL-3.0-only</license>
 
   <depend>rclpy</depend>
+  <exec_depend>status_lights_interfaces</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

@@ -1,10 +1,12 @@
 import rclpy
 from rclpy.node import Node
+from status_lights_interfaces.srv import SetColor, FlashColor
 
 import board
 import neopixel_spi
 from threading import Timer
 from typing import Tuple
+
 
 class StatusLightsNode(Node):
 
@@ -18,12 +20,15 @@ class StatusLightsNode(Node):
         self.spi = board.SPI()
         self.pixels = neopixel_spi.NeoPixel_SPI(self.spi, led_count)
 
+        self.set_srv = self.create_service(SetColor, 'set_color', self.set_color_callback)
+        self.flash_srv = self.create_service(FlashColor, 'flash_color', self.flash_color_callback)
+
         self.show_timer = self.create_timer(
-            callback = self.pixels.show,
-            timer_period_sec = 0.1,
+            callback=self.pixels.show,
+            timer_period_sec=0.1,
         )
 
-    def set_color(self, led_num: int, color: Tuple[int, int, int]) -> None:
+    def set_color_callback(self, led_num: int, color: Tuple[int, int, int]) -> None:
         """
         This method sets the color of the passed number led to the passed color
 
@@ -34,7 +39,7 @@ class StatusLightsNode(Node):
 
         self.pixels[led_num] = color
 
-    def flash_color(self, led_num: int, color: Tuple[int, int, int], timeout: float) -> None:
+    def flash_color_callback(self, led_num: int, color: Tuple[int, int, int], timeout: float) -> None:
         """
         This method is for automation or any other game strategy related cues. e.
 
