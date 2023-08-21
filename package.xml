@@ -5,7 +5,7 @@
   <version>0.0.0</version>
   <description>Ros2 node for controlling status indicators</description>
   <maintainer email="alohia@ideaventionsacademy.org">Arya Lohia</maintainer>
-  <license>GPL-3.0-only</license>
+  <license>LGPL-3.0-only</license>
 
   <depend>rclpy</depend>
 
