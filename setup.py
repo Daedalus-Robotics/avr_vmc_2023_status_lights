@@ -16,7 +16,7 @@ setup(
     maintainer='Arya Lohia',
     maintainer_email='alohia@ideaventionsacademy.org',
     description='Ros2 node for controlling status indicators',
-    license='GPL-3.0-only',
+    license='LGPL-3.0-only',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
