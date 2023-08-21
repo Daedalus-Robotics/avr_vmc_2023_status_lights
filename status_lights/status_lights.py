@@ -38,6 +38,7 @@ class StatusLightsNode(Node):
         """
 
         self.pixels[led_num] = color
+        self.pixels.show()
 
     def flash_color_callback(self, led_num: int, color: Tuple[int, int, int], timeout: float) -> None:
         """
@@ -49,9 +50,9 @@ class StatusLightsNode(Node):
         """
 
         old_color = self.pixels[led_num]
-        self.set_color(led_num, color)
+        self.set_color_callback(led_num, color)
         self.pixels.show()
-        Timer(timeout, lambda: self.set_color(led_num, old_color)).start()
+        Timer(timeout, lambda: self.set_color_callback(led_num, old_color)).start()
 
 
 def main() -> None:
