@@ -23,22 +23,35 @@ class StatusLightsNode(Node):
         self.set_srv = self.create_service(
             SetLight,
             'set_color',
-            lambda request, response: self.set_color(
-                request.led_num, (request.r, request.g, request.b)
-            )
+            self._set_color_callback
         )
         self.flash_srv = self.create_service(
             FlashLight,
             'flash_color',
-            lambda request, response: self.flash_color(
-                request.led_num, (request.r, request.g, request.b), request.timeout
-            )
+            self._flash_color_callback
         )
 
         self.show_timer = self.create_timer(
             callback=self.pixels.show,
             timer_period_sec=0.1,
         )
+
+    def _set_color_callback(self, request: SetLight, response: SetLight) -> SetLight:
+        self.set_color(
+            led_num=request.led_num,
+            color=(request.r, request.g, request.b)
+        )
+
+        return response
+
+    def _flash_color_callback(self, request: FlashLight, response: FlashLight) -> FlashLight:
+        self.flash_color(
+            led_num=request.led_num,
+            color=(request.r, request.g, request.b),
+            timeout=request.timeout
+        )
+
+        return response
 
     def set_color(self, led_num: int, color: Tuple[int, int, int]) -> None:
         """
