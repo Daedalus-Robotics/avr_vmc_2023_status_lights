@@ -20,15 +20,23 @@ class StatusLightsNode(Node):
         self.spi = board.SPI()
         self.pixels = neopixel_spi.NeoPixel_SPI(self.spi, led_count)
 
-        self.set_srv = self.create_service(SetLight, 'set_color', self.set_color_callback)
-        self.flash_srv = self.create_service(FlashLight, 'flash_color', self.flash_color_callback)
+        self.set_srv = self.create_service(
+            SetLight,
+            'set_color',
+            lambda param: self.set_color(param.led_num, (param.r, param.g, param.b))
+        )
+        self.flash_srv = self.create_service(
+            FlashLight,
+            'flash_color',
+            lambda param: self.flash_color(param.led_num, (param.r, param.g, param.b), param.timeout)
+        )
 
         self.show_timer = self.create_timer(
             callback=self.pixels.show,
             timer_period_sec=0.1,
         )
 
-    def set_color_callback(self, led_num: int, color: Tuple[int, int, int]) -> None:
+    def set_color(self, led_num: int, color: Tuple[int, int, int]) -> None:
         """
         This method sets the color of the passed number led to the passed color
 
@@ -40,7 +48,7 @@ class StatusLightsNode(Node):
         self.pixels[led_num] = color
         self.pixels.show()
 
-    def flash_color_callback(self, led_num: int, color: Tuple[int, int, int], timeout: float) -> None:
+    def flash_color(self, led_num: int, color: Tuple[int, int, int], timeout: float) -> None:
         """
         This method is for automation or any other game strategy related cues. e.
 
@@ -50,9 +58,9 @@ class StatusLightsNode(Node):
         """
 
         old_color = self.pixels[led_num]
-        self.set_color_callback(led_num, color)
+        self.set_color(led_num, color)
         self.pixels.show()
-        Timer(timeout, lambda: self.set_color_callback(led_num, old_color)).start()
+        Timer(timeout, lambda: self.set_color(led_num, old_color)).start()
 
 
 def main() -> None:
