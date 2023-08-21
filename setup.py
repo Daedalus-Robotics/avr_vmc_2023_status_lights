@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'status_lights = status_lights.status_lights:main',
+            'status_lights_node = status_lights.status_lights:main',
         ],
     },
 )
