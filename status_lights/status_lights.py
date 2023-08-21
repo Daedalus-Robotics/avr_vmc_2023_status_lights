@@ -1,11 +1,11 @@
-import rclpy
-from rclpy.node import Node
-from status_lights_interfaces.srv import SetColor, FlashColor
+from threading import Timer
+from typing import Tuple
 
 import board
 import neopixel_spi
-from threading import Timer
-from typing import Tuple
+import rclpy
+from rclpy.node import Node
+from status_lights_interfaces.srv import SetLight, FlashLight
 
 
 class StatusLightsNode(Node):
@@ -20,8 +20,8 @@ class StatusLightsNode(Node):
         self.spi = board.SPI()
         self.pixels = neopixel_spi.NeoPixel_SPI(self.spi, led_count)
 
-        self.set_srv = self.create_service(SetColor, 'set_color', self.set_color_callback)
-        self.flash_srv = self.create_service(FlashColor, 'flash_color', self.flash_color_callback)
+        self.set_srv = self.create_service(SetLight, 'set_color', self.set_color_callback)
+        self.flash_srv = self.create_service(FlashLight, 'flash_color', self.flash_color_callback)
 
         self.show_timer = self.create_timer(
             callback=self.pixels.show,
@@ -47,7 +47,7 @@ class StatusLightsNode(Node):
         :param color: (r, g, b) color
         :param timeout:
         """
-        
+
         old_color = self.pixels[led_num]
         self.set_color(led_num, color)
         self.pixels.show()
@@ -58,6 +58,7 @@ def main() -> None:
     rclpy.init()
     node = StatusLightsNode()
     rclpy.spin(node)
+
 
 if __name__ == '__main__':
     main()
