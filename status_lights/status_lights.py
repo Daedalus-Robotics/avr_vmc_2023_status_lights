@@ -1,5 +1,5 @@
 from threading import Timer
-from typing import Tuple
+from typing import Tuple, List
 
 import board
 import neopixel_spi
@@ -15,10 +15,12 @@ class StatusLightsNode(Node):
 
         self.declare_parameter('led_count', 8)
 
-        led_count = self.get_parameter('led_count').value
+        self.led_count = self.get_parameter('led_count').value
 
         self.spi = board.SPI()
-        self.pixels = neopixel_spi.NeoPixel_SPI(self.spi, led_count)
+        self.pixels = neopixel_spi.NeoPixel_SPI(self.spi, self.led_count)
+
+        self.flash_timers: List[Timer | None] = [None] * self.led_count
 
         self.set_srv = self.create_service(
             SetLight,
@@ -62,8 +64,12 @@ class StatusLightsNode(Node):
         :return:
         """
 
-        self.pixels[led_num] = color
-        self.pixels.show()
+        if 0 <= led_num < self.led_count:
+            if self.flash_timers[led_num] is not None:
+                self.flash_timers[led_num].cancel()
+                self.flash_timers[led_num] = None
+            self.pixels[led_num] = color
+            self.pixels.show()
 
     def flash_color(self, led_num: int, color: Tuple[int, int, int], timeout: float) -> None:
         """
@@ -74,10 +80,11 @@ class StatusLightsNode(Node):
         :param timeout:
         """
 
-        old_color = self.pixels[led_num]
-        self.set_color(led_num, color)
-        self.pixels.show()
-        Timer(timeout, lambda: self.set_color(led_num, old_color)).start()
+        if 0 <= led_num < self.led_count:
+            old_color = self.pixels[led_num]
+            self.set_color(led_num, color)
+            self.flash_timers[led_num] = Timer(timeout, lambda: self.set_color(led_num, old_color))
+            self.flash_timers[led_num].start()
 
 
 def main() -> None:
