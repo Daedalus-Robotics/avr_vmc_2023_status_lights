@@ -5,7 +5,7 @@ import board
 import neopixel_spi
 import rclpy
 from rclpy.node import Node
-from status_lights_interfaces.srv import SetLight, FlashLight
+from avr_vmc_2023_status_interfaces.srv import SetLight, FlashLight
 
 
 class StatusLightsNode(Node):
