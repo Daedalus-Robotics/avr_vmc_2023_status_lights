@@ -1,14 +1,13 @@
 from setuptools import setup
 
-package_name = 'status_lights'
+package_name = 'avr_vmc_2023_status_lights'
 
 setup(
     name=package_name,
     version='0.0.0',
     packages=[package_name],
     data_files=[
-        ('share/ament_index/resource_index/packages',
-         ['resource/' + package_name]),
+        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
     install_requires=['setuptools'],
