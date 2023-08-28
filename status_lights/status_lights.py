@@ -41,7 +41,7 @@ class StatusLightsNode(Node):
     def _set_color_callback(self, request: SetLight, response: SetLight) -> SetLight:
         self.set_color(
             led_num=request.led_num,
-            color=(request.r, request.g, request.b)
+            color=(request.color.r, request.color.g, request.color.b)
         )
 
         return response
@@ -49,7 +49,7 @@ class StatusLightsNode(Node):
     def _flash_color_callback(self, request: FlashLight, response: FlashLight) -> FlashLight:
         self.flash_color(
             led_num=request.led_num,
-            color=(request.r, request.g, request.b),
+            color=(request.color.r, request.color.g, request.color.b),
             timeout=request.timeout
         )
 
