@@ -11,7 +11,7 @@ from avr_vmc_2023_status_interfaces.srv import SetLight, FlashLight
 class StatusLightsNode(Node):
 
     def __init__(self) -> None:
-        super().__init__('status_lights')
+        super().__init__('status_lights', namespace="status_lights")
 
         self.declare_parameter('led_count', 8)
 
